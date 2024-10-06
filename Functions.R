@@ -25,8 +25,12 @@ read.func <- function(file, df.name) { #file is the name of a file in the same d
 
 ## READ.FUNC.PATHS() ##
 ##read.func.csv takes a df with paths to files that need to be loaded as df
-read.func.csv <- function(df, index) { #csv is a file containing paths, index is the row number i want to extract
+read.func.csv <- function(df, index, olink=FALSE) { #csv is a file containing paths, index is the row number i want to extract
              filepath_index <- df[index, c("filepaths")]
+             if (olink==FALSE) {
              df <- read.func(filepath_index, "df")
+              } else {
+             df <- read_NPX(filepath_index)
+              }
              return(df)
              }
