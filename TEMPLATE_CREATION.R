@@ -21,7 +21,8 @@ cat("\n\n\n\n###################################################################
 
 
 #If getting end of line error or other bug related to csv reading:
-filepaths <- c("/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238A_Tartaglia_NPX_IPCnormalized2024-08-08.csv",    #                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238B_Tartaglia_EXTENDED_NPX_2024-09-30_PCnormalized/Tartaglia_EXTENDED_NPX_2024-09-30.csv",
+filepaths <- c("/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238A_Tartaglia_NPX_IPCnormalized2024-08-08.csv",
+                "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238B_Tartaglia_EXTENDED_NPX_2024-09-30_PCnormalized/Tartaglia_EXTENDED_NPX_2024-09-30.csv",
                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238C_Tartaglia_EXTENDED_NPX_2024-03-25_PC_normalized.csv",
                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Second_project_AD_HC/Sample_all_2ndproject.csv",
                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Third_project_Genetic_cases/Sample_template_3rd_olink.csv")
