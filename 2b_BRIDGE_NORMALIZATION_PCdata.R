@@ -18,19 +18,20 @@ library(OlinkAnalyze)
 cat("\n\n\n\n###############################################################################################\n",
             "2. LOAD DATAFRAME\n",
             "###############################################################################################\n\n\n")
-    
-    # #If getting end of line error or other bug related to csv reading:
-    # ##To run only without the arg.vec part in bash Run_ script, or directly on the Rscript
-    # filepaths <- c("/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238A_Tartaglia_NPX_IPCnormalized2024-08-08.csv", #Plate A NPX data            
-    #                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238B_Tartaglia_EXTENDED_NPX_2024-09-30_PCnormalized/Tartaglia_EXTENDED_NPX_2024-09-30.csv", #Plate B NPX data
-    #                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238C_Tartaglia_EXTENDED_NPX_2024-03-25_PC_normalized.csv", #Plate C NPX
-    #                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Second_project_AD_HC/Sample_all_2ndproject.csv", #Merged IDs from Simrika: not needed here but needed for TEMPLATE_CREATION.R
-    #                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Third_project_Genetic_cases/Sample_template_3rd_olink.csv", #Merged IDs from Simrika: not needed here but needed for TEMPLATE_CREATION.R
-    #                 "all_template_df.csv") #Template file with all TARTAGLIA ID to Aliquot ID (=SAMPLEID) match keys
 
-    # filepaths_df <- data.frame(filepaths)
-    # write.csv(filepaths_df, "filepaths_normalization.csv") #a copy of object created at the time of submission was kept for reference. Can be shared upon request. 
+#      #One extra file compared to the TEMPLATE_CREATION.R script: the all_template_df.csv
+#     #If getting end of line error or other bug related to csv reading:
+#     ##To run only without the arg.vec part in bash Run_ script, or directly on the Rscript
+#     filepaths <- c("/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238A_Tartaglia_NPX_IPCnormalized2024-08-08.csv", #Plate A NPX data            
+#                     "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238B_Tartaglia_EXTENDED_NPX_2024-09-30_PCnormalized/Tartaglia_EXTENDED_NPX_2024-09-30.csv", #Plate B NPX data
+#                     "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238C_Tartaglia_EXTENDED_NPX_2024-03-25_PC_normalized.csv", #Plate C NPX
+#                     "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Second_project_AD_HC/Sample_all_2ndproject.csv", #Merged IDs from Simrika: not needed here but needed for TEMPLATE_CREATION.R
+#                     "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Third_project_Genetic_cases/Sample_template_3rd_olink.csv", #Merged IDs from Simrika: not needed here but needed for TEMPLATE_CREATION.R
+#                     "/Users/nikhilbhagwat/Desktop/0_DATA/0.3_Clinical/0.3.7_local_FTLD/Olink_FTLD_clinical.csv", #Demographics from the local Olink data
+#                     "all_template_df.csv") #Template file with all TARTAGLIA ID to Aliquot ID (=SAMPLEID) match keys
 
+#     filepaths_df <- data.frame(filepaths)
+#     write.csv(filepaths_df, "2_filepaths_normalization.csv") #a copy of object created at the time of submission was kept for reference. Can be shared upon request. 
 
 #Read the csv that contains the pths to the plates
 filepaths_df <- read.func(arg.vec[1], 'filepaths_df') #arg.vec[1] is the csv with the pathways to the different data spreadsheets. 
@@ -41,7 +42,7 @@ plateB_df <- read.func.csv(filepaths_df, 2, olink=TRUE) #diff delimiter: using O
 plateC_df <- read.func.csv(filepaths_df, 3, olink=TRUE) #diff delimiter: using OlinkAnalyze read function is best
 
 #Read the manifest plate
-all_plates_manifest_df <- read.func.csv(filepaths_df, 6, olink=FALSE)
+all_plates_manifest_df <- read.func.csv(filepaths_df, 7, olink=FALSE)
 
 
 cat("\n\n\n\n###############################################################################################\n",
