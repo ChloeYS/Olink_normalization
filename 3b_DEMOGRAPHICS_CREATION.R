@@ -19,29 +19,23 @@ cat("\n\n\n\n###################################################################
             "2. LOAD DATAFRAME\n",
             "###############################################################################################\n\n\n")
     
-    # #If getting end of line error or other bug related to csv reading:
-    # ##To run only without the arg.vec part in bash Run_ script, or directly on the Rscript
-    # filepaths <- c("/Users/nikhilbhagwat/Desktop/0_DATA/0.3_Clinical/0.3.7_local_FTLD/Olink_FTLD_clinical.csv", 
-                    # "/Users/nikhilbhagwat/Desktop/0_DATA/0.3_Clinical/0.3.5_ALLFTD_GEN",
-                    #"") #Start with the FTLD data first
-
-    # filepaths_df <- data.frame(filepaths)
-    # write.csv(filepaths_df, "filepaths_demographics.csv") #a copy of object created at the time of submission was kept for reference. Can be shared upon request. 
-
+#Read the filepaths created by 1_TEMPLATE_CREATION.R script
 
 #Read the csv that contains the pths to the plates
 filepaths_df <- read.func(arg.vec[1], 'filepaths_df') #arg.vec[1] is the csv with the pathways to the different data spreadsheets. 
 
 #Create the dfs by reading the files indicated by the csv: olink plate data
-ftld_demo <- read.func.csv(filepaths_df, 1, olink=FALSE)
-nonftld_demo <- read.func.csv(filepaths_df, 2, olink=FALSE)
+local_data_simrika_df <- read.func.csv(filepaths_df, 4, olink=FALSE)
+gen_data_simrika_df <- read.func.csv(filepaths_df, 5, olink=FALSE)
+local_data_chloe_df <- read.func.csv(filepaths_df, 6, olink=FALSE)
+all_template_df <- read.func.csv(filepaths_df, 7, olink=FALSE)
 
 
-
-# cat("\n\n\n\n###############################################################################################\n",
-#             "3. CLEAN THE FTLD DEMOGRAPHIC FILE\n",
-#             "###############################################################################################\n\n\n")
+cat("\n\n\n\n###############################################################################################\n",
+            "3. CLEAN THE DATA FROM SIMRIKA FIRST\n",
+            "###############################################################################################\n\n\n")
     
+
 # colnames(ftld_demo)
 #  [1] "ID_main"                     "IDs_same_tp"                
 #  [3] "IDs_other_tps"               "Lifetime_CSF"               
