@@ -20,14 +20,15 @@ cat("\n\n\n\n###################################################################
             "###############################################################################################\n\n\n")
 
 
-#If getting end of line error or other bug related to csv reading:
-filepaths <- c("/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238A_Tartaglia_NPX_IPCnormalized2024-08-08.csv", #plate A raw data
-                "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238B_Tartaglia_EXTENDED_NPX_2024-09-30_PCnormalized/Tartaglia_EXTENDED_NPX_2024-09-30.csv", #plate B raw data
-                "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238C_Tartaglia_EXTENDED_NPX_2024-03-25_PC_normalized.csv", #plate C raw data
-                "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Second_project_AD_HC/Sample_all_2ndproject.csv", #Sample to ID match from Simrika, clinic cases
-                "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Third_project_Genetic_cases/Sample_template_3rd_olink.csv") #Sample to ID match from Simrika, genetic cases
-    filepaths_df <- data.frame(filepaths)
-    write.csv(filepaths_df, "filepaths.csv") #a copy of object created at the time of submission was kept for reference. Can be shared upon request. 
+# #If getting end of line error or other bug related to csv reading:
+# filepaths <- c("/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238A_Tartaglia_NPX_IPCnormalized2024-08-08.csv", #plate A raw data
+#                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238B_Tartaglia_EXTENDED_NPX_2024-09-30_PCnormalized/Tartaglia_EXTENDED_NPX_2024-09-30.csv", #plate B raw data
+#                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.4_Olink_PC_data/2238C_Tartaglia_EXTENDED_NPX_2024-03-25_PC_normalized.csv", #plate C raw data
+#                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Second_project_AD_HC/Sample_all_2ndproject.csv", #Sample to ID match from Simrika, clinic cases
+#                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Third_project_Genetic_cases/Sample_template_3rd_olink.csv", #Sample to ID match from Simrika, genetic cases
+#                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.3_Clinical/0.3.7_local_FTLD/Olink_FTLD_clinical.csv") #Demographics from the local Olink data
+#     filepaths_df <- data.frame(filepaths)
+#     write.csv(filepaths_df, "1_filepaths.csv") #a copy of object created at the time of submission was kept for reference. Can be shared upon request. 
 
 #Read the csv that contains the pths to the plates
 filepaths_df <- read.func(arg.vec[1], 'filepaths_df') #arg.vec[1] is the csv with the pathways to the different data spreadsheets. 
