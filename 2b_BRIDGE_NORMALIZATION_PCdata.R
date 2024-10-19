@@ -273,7 +273,7 @@ npx_2 <- plateC_df %>% mutate(Project = "data2")%>% as_tibble()
 AvsC_bridged_df <- olink_normalization_bridge(project_1_df = npx_1, project_2_df = npx_2,
                                             bridge_samples = AtoC_overlap_samples_list,
                                             project_1_name = "data1", project_2_name = "data2",
-                                            project_ref_name = "data1")
+                                            project_ref_name = "data2")
 
 
 cat("\n\n\n\n###############################################################################################\n",
@@ -289,7 +289,7 @@ npx_2 <- plateC_df %>% mutate(Project = "data2")%>% as_tibble()
 BvsC_bridged_df <- olink_normalization_bridge(project_1_df = npx_1, project_2_df = npx_2,
                                             bridge_samples = BtoC_overlap_samples_list,
                                             project_1_name = "data1", project_2_name = "data2",
-                                            project_ref_name = "data1")
+                                            project_ref_name = "data2")
 
 
 cat("\n\n\n\n###############################################################################################\n",
@@ -317,7 +317,7 @@ cat("\n\n\n\n###################################################################
             "13. QC OF PLATES B TO C BRIDGING: OLINKANALYZE \n",
             "###############################################################################################\n\n\n")
 
-Plot NPX density after bridging normalization
+# Plot NPX density after bridging normalization
 BvsC_bridged_df %>%
   mutate(Panel = gsub("Olink ", "", Panel)) %>%
   ggplot(aes(x = NPX, fill = PlateID)) + geom_density(alpha = 0.3) + 
@@ -340,13 +340,13 @@ cat("\n\n\n\n###################################################################
             "###############################################################################################\n\n\n")
 
 AvsC_bridged_df %>% 
-  dplyr::filter(Project == "data2") %>% 
+  dplyr::filter(Project == "data1") %>% 
   dplyr::select(-Project, -Adj_factor) %>% 
   write.csv(, file = "AtoC_bridged_PC.csv")
 
 
 BvsC_bridged_df %>% 
-  dplyr::filter(Project == "data2") %>% 
+  dplyr::filter(Project == "data1") %>% 
   dplyr::select(-Project, -Adj_factor) %>% 
   write.csv(, file = "BtoC_bridged_PC.csv")
 
