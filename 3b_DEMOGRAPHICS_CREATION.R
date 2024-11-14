@@ -1,4 +1,4 @@
-#Last updated October 2024
+#Last updated November 2024
 
 #Usage: to create the bridged data files, sources other files and output csv is sourced by other files.
 
@@ -18,51 +18,85 @@ cat("\n\n\n\n###################################################################
             "2. LOAD DATAFRAME\n",
             "###############################################################################################\n\n\n")
     
-#Read the filepaths created by 1_TEMPLATE_CREATION.R script
+    # # List of file pathways for the demographics
+    # #If getting end of line error or other bug related to csv reading:
+    # ##To run only without the arg.vec part in bash Run_ script, or directly on the Rscript
+    # filepaths <- c("/Users/nikhilbhagwat/Desktop/0_DATA/0.4_Biofluids/0.4.3_Olink/0.4.3.1_Simrika_Onedrive/Third_project_Genetic_cases/Sample_template_3rd_olink.csv", #Genetic FTLD spreadsheet
+    #                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.3_Clinical/0.3.7_local_FTLD/Olink_FTLD_clinical.csv", #Chloe's FTLD spreadsheet
+    #                 "/Users/nikhilbhagwat/Desktop/0_DATA/0.3_Clinical/0.3.9_local_nonFTLD/Olink_nonFTLD_clinical.csv", #Chloe's nonFTLD spreadsheet
+    #                 "all_template_df.csv") #Template file with all TARTAGLIA ID to Aliquot ID (=SAMPLEID) match keys
 
-#Read the csv that contains the pths to the plates
+    # filepaths_df <- data.frame(filepaths)
+    # write.csv(filepaths_df, "3_filepaths_demographics.csv") #a copy of object created at the time of submission was kept for reference. Can be shared upon request. 
+
+#Read the csv that contains the paths to the plates
 filepaths_df <- read.func(arg.vec[1], 'filepaths_df') #arg.vec[1] is the csv with the pathways to the different data spreadsheets. 
 
 #Create the dfs by reading the files indicated by the csv: olink plate data
-local_data_simrika_df <- read.func.csv(filepaths_df, 4, olink=FALSE)
-gen_data_simrika_df <- read.func.csv(filepaths_df, 5, olink=FALSE)
-local_data_chloe_df <- read.func.csv(filepaths_df, 6, olink=FALSE)
-all_template_df <- read.func.csv(filepaths_df, 7, olink=FALSE)
+gen_data_simrika_df <- read.func.csv(filepaths_df, 1, olink=FALSE)
+local_data_ftd_df <- read.func.csv(filepaths_df, 2, olink=FALSE)
+local_data_nonftd_df <- read.func.csv(filepaths_df, 3, olink=FALSE)
+all_template_df <- read.func.csv(filepaths_df, 4, olink=FALSE)
 
 
 cat("\n\n\n\n###############################################################################################\n",
-            "3. CLEAN THE DATA FROM CHLOE FIRST\n",
+            "3. CLEAN THE FTD COHORT FIRST\n",
             "###############################################################################################\n\n\n")
 
-#Only keep the subjects included in Olink
-local_data_chloe_df <- local_data_chloe_df[, c("ID_main",
-                                                "Primary_DX_clin_final", "Primary_DX_clin_visit","DX_PPA_lifetime",
-                                                "Evidence_AD_lifetime", "CSF.AD_visit", "CSF_ptau_visit","CSF_ttau_visit", "CSF_abeta42_visit",
-                                                "CSF_ATI_visit","Evidence_ASYN_lifetime", "ASYN.SAA_visit", "Postmortem_primary","Genetics_FamilyHistory",
-                                                 "APOEe4_alleles", "Sex", "Race_ethnicity",
-                                                 "DOB_dd.mmmm.yy","ID_Date_dd.mmmm.yy", "Onset_age",  "Onset_type",
-                                                 "Education", "NFL_visit","GFAP_visit", "YKL40_visit",
-                                                "Arthritis","WMH_PV","WMH_D", "CDR_original_SOB","CDR_original_Total",
-                                                "PSPRS_visit","MOCA_visit_1yrmax_zscore")]          
+local_data_ftd_df <- local_data_ftd_df[, c("ID_main",
+                                            "Primary_DX_clin_final", "Primary_DX_clin_visit","DX_PPA_lifetime",
+                                            "Evidence_AD_lifetime", "CSF.AD_visit", "CSF_ptau_visit","CSF_ttau_visit", "CSF_abeta42_visit",
+                                            "CSF_ATI_visit","Evidence_ASYN_lifetime", "ASYN.SAA_visit", "Postmortem_primary","Genetics_FamilyHistory",
+                                            "APOEe4_alleles", "Sex", "Race_ethnicity",
+                                            "Age", #should be empty
+                                            "DOB_dd.mmmm.yy","ID_Date_dd.mmmm.yy", "Onset_age",  "Onset_type",
+                                            "Education", "NFL_visit","GFAP_visit", "YKL40_visit",
+                                            "Arthritis","WMH_PV","WMH_D", "CDR_original_SOB","CDR_original_Total",
+                                            "PSPRS_visit","MOCA_visit_1yrmax_zscore")]          
 
 #Rename columns in chloe's file
-colnames(local_data_chloe_df)[which(names(local_data_chloe_df) == "ID_main")] <- "Freezer_ID"
+colnames(local_data_ftd_df)[which(names(local_data_ftd_df) == "ID_main")] <- "Freezer_ID"
 
-if (sum(local_data_chloe_df$Freezer_ID %in% all_template_df$Freezer_ID)<67) {
+if (sum(local_data_ftd_df$Freezer_ID %in% all_template_df$Freezer_ID)<67) {
+    cat("Check that the subject IDs in clinical files match the ones in the Olink dataset or use grep\n")
+}
+
+cat("\n\n\n\n###############################################################################################\n",
+            "4. CLEAN THE NON-FTD COHORT NEXT \n",
+            "###############################################################################################\n\n\n")
+
+local_data_nonftd_df <- local_data_nonftd_df[, c("ID_main",
+                                            "Primary_DX_clin_final", "Primary_DX_clin_visit","DX_PPA_lifetime",
+                                            "Evidence_AD_lifetime", "CSF.AD_visit", "CSF_ptau_visit","CSF_ttau_visit", "CSF_abeta42_visit",
+                                            "CSF_ATI_visit","Evidence_ASYN_lifetime", "ASYN.SAA_visit", "Postmortem_primary","Genetics_FamilyHistory",
+                                            "APOEe4_alleles", "Sex", "Race_ethnicity",
+                                            "Age", #only in this one as pple missing the LP & DOB date
+                                            "DOB_dd.mmmm.yy","ID_Date_dd.mmmm.yy", "Onset_age",  "Onset_type",
+                                            "Education", "NFL_visit","GFAP_visit", "YKL40_visit",
+                                            "Arthritis","WMH_PV","WMH_D", "CDR_original_SOB","CDR_original_Total",
+                                            "PSPRS_visit","MOCA_visit_1yrmax_zscore")] 
+
+#Rename columns in clinical data file
+colnames(local_data_nonftd_df)[which(names(local_data_nonftd_df) == "ID_main")] <- "Freezer_ID"
+
+if (sum(local_data_nonftd_df$Freezer_ID %in% all_template_df$Freezer_ID)!= length(local_data_nonftd_df$Freezer_ID)) {
     cat("Check that the subject IDs in clinical files match the ones in the Olink dataset or use grep\n")
 }
 
 
+cat("\n\n\n\n###############################################################################################\n",
+            "5. MERGE THE TWO COHORT CLINICAL DATA THEN THE PLATE LAYOUT \n",
+            "###############################################################################################\n\n\n")
+
+if (sum(colnames(local_data_ftd_df) != colnames(local_data_nonftd_df)) >0) {
+    cat("Dataframes with the non-FTD vs FTD cohort clinical data need to have same variables for the merge\n")
+}
+
+local_data_df <- rbind(local_data_ftd_df, local_data_nonftd_df)
+
 #Merge with the template file
-demographics_df <- left_join(all_template_df,local_data_chloe_df, by="Freezer_ID")
+demographics_df <- left_join(all_template_df,local_data_df, by="Freezer_ID")
 
-#For tonight, I will create a file with just the FTLD data and do analyses within the FTLD. Will create a demographic file that gets
-##read in the analysis script. But tht demographic file can be easily replaced by the version with HC in the future.
-#Tomorrow, first step would be to add the HC and rerun the analysis this time with the HC and AD subjects. 
-
-###################################################################
-##THIS IS WHERE THE INCORPORATION OF THE HC AND AD SHOULD HAPPEN
-###################################################################
 
 cat("\n\n\n\n###############################################################################################\n",
             "4. FORMAT THE VARIABLES\n",
@@ -94,6 +128,7 @@ demographics_df$CSF_ptau_visit <- as.numeric(demographics_df$CSF_ptau_visit)
 demographics_df$CSF_ttau_visit <- as.numeric(demographics_df$CSF_ttau_visit)
 demographics_df$CSF_abeta42_visit <- as.numeric(demographics_df$CSF_abeta42_visit)
 demographics_df$CSF_ATI_visit <- as.numeric(demographics_df$CSF_ATI_visit)
+demographics_df$Age <- as.numeric(demographics_df$Age)
 demographics_df$Onset_age <- as.numeric(demographics_df$Onset_age)
 demographics_df$Education <- as.numeric(demographics_df$Education)
 demographics_df$NFL_visit <- as.numeric(demographics_df$NFL_visit)
@@ -111,13 +146,15 @@ demographics_df$DOB <- as.Date(as.character(demographics_df$DOB_dd.mmmm.yy), for
 demographics_df$Date <- as.Date(as.character(demographics_df$ID_Date_dd.mmmm.yy), format="%Y-%m-%d") 
 
 
+
 cat("\n\n\n\n###############################################################################################\n",
             "5. CREATE NEW VARIABLES\n",
             "###############################################################################################\n\n\n")
 
 ##Calculate ages
 demographics_df <- demographics_df %>%
-    mutate(Age= (as.numeric(Date - DOB))/365) %>%
+    mutate(Age=case_when(is.na(Age)==TRUE ~ as.numeric(Date - DOB)/365,
+            TRUE ~ as.numeric(Age)))%>%
     mutate(Disease_duration= (as.numeric(Age - Onset_age))) %>%
     data.frame()
 
@@ -128,6 +165,7 @@ demographics_df <- demographics_df %>%
                             grepl("CBS", APD_DX) | grepl("CBD", Postmortem_primary) ~ "CBS",
                             TRUE ~ "Other")) %>%
     data.frame()
+
 
 #Standardize AD and ASyn-SAA diagnosis
 demographics_df <- demographics_df %>%
@@ -143,34 +181,35 @@ demographics_df <- demographics_df %>%
                                     grepl("Negative", ASYN.SAA_visit) ~ "ASYNneg")) %>%
     data.frame()
 
-#Create a co-pathology variable
+#Create a co-pathology variable: indicates ASyn-SAA OR AD status in addition to hypothesized primary DX
+##will need to expand beyond PSP and CBS later
 demographics_df <- demographics_df %>%
-    mutate(Copathology=case_when(grepl("Yes", Evidence_AD_lifetime) & grepl("PSP", APD_DX) ~ "Yes",
-                                 grepl("Yes", Evidence_ASYN_lifetime) & grepl("PSP", APD_DX) ~ "Yes",
-                                grepl("Yes", Evidence_ASYN_lifetime) & grepl("CBS", APD_DX) ~ "Yes",
-                                TRUE ~ "No")) %>%
-    mutate(Copathology2=case_when(grepl("Yes", Evidence_AD_lifetime) & grepl("PSP", APD_DX) ~ "AD+",
+    mutate(Copathology=case_when(grepl("Yes", Evidence_AD_lifetime) & grepl("PSP", APD_DX) ~ "AD+",
                                  grepl("Yes", Evidence_ASYN_lifetime) & grepl("PSP", APD_DX) ~ "ASyn-SAA+",
                                 grepl("Yes", Evidence_AD_lifetime) & grepl("Yes", Evidence_ASYN_lifetime) & grepl("PSP", APD_DX) ~ "AD+/ASyn-SAA+",
                                 grepl("Yes", Evidence_ASYN_lifetime) & grepl("CBS", APD_DX) ~ "ASyn-SAA+",
                                 TRUE ~ "No")) %>%
     data.frame()
 
-#Create a pathology group variable
+#Standardize Onset for the YOAD vs LOAD analyses
 demographics_df <- demographics_df %>%
-    mutate(Path_Grouping=case_when(grepl("Yes", Evidence_AD_lifetime) & grepl("CBS", APD_DX) ~ "AD",
-                                  grepl("PSP", APD_DX) ~ "PSP",
-                                grepl("No", Evidence_AD_lifetime) & grepl("CBS", APD_DX) ~ "CBS-other",
-                                TRUE ~ "Other")) %>%
+    mutate(EarlyOnset=case_when(as.numeric(Onset_age)<=65 ~ "EarlyOnset",
+                                as.numeric(Onset_age)>65 ~ "LateOnset",
+                                TRUE ~ "NA")) %>%
+    mutate(EarlyOnsetAD=case_when(Evidence_AD_lifetime_binary=="Yes" & as.numeric(Onset_age)<=65 ~ "EOAD",
+                                  Evidence_AD_lifetime_binary=="Yes" & as.numeric(Onset_age)>65 ~ "LOAD",
+                                TRUE ~ "NA")) %>%
     data.frame()
+
 
 cat("\n\n\n\n###############################################################################################\n",
             "6. CREATE NEW VARIABLES\n",
             "###############################################################################################\n\n\n")
 
 demographics_df <- demographics_df[, c("Freezer_ID", "PlateID",
-                                    "Sex", "Education", 
-                                    "APD_DX", "Copathology", "Copathology2", "Path_Grouping", "Evidence_AD_lifetime_binary", "Evidence_AD_visit_binary", "Evidence_ASYN_lifetime_binary", "ASYN.SAA_visit_binary",
+                                    "Sex", "Education", "Race_ethnicity",
+                                    "EarlyOnset", "EarlyOnsetAD",
+                                    "APD_DX", "Copathology", "Evidence_AD_lifetime_binary", "Evidence_AD_visit_binary", "Evidence_ASYN_lifetime_binary", "ASYN.SAA_visit_binary",
                                     "Age", "Onset_age", "Disease_duration",
                                     "CSF_ptau_visit",  "CSF_ttau_visit", "CSF_abeta42_visit", "CSF_ATI_visit",
                                     "NFL_visit", "GFAP_visit", "YKL40_visit",
