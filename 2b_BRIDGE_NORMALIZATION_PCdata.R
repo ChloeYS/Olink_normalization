@@ -334,7 +334,7 @@ olink_pca_plot(df = BvsC_bridged_data, color_g = "Type", byPanel= TRUE,label_sam
 
 
 cat("\n\n\n\n###############################################################################################\n",
-            "14. SAVING THE BRIDGED DATA \n",
+            "14. SAVING THE BRIDGED AND REFERENCE DATA \n",
             "###############################################################################################\n\n\n")
 
 AvsC_bridged_df %>% 
@@ -342,9 +342,12 @@ AvsC_bridged_df %>%
   dplyr::select(-Project, -Adj_factor) %>% 
   write.csv(, file = "AtoC_bridged_PC.csv")
 
-
 BvsC_bridged_df %>% 
   dplyr::filter(Project == "data1") %>% 
   dplyr::select(-Project, -Adj_factor) %>% 
   write.csv(, file = "BtoC_bridged_PC.csv")
 
+AvsC_bridged_df %>% 
+  dplyr::filter(Project == "data2") %>% 
+  dplyr::select(-Project, -Adj_factor) %>% 
+  write.csv(, file = "C_bridgeRef_PC.csv")
