@@ -44,7 +44,8 @@ local_data_nonftd_df <- read.func.csv(filepaths_df, 3, olink=FALSE)
 allftd_ids_simrika_df <- read.func.csv(filepaths_df, 4, olink=FALSE)
 allftd_demo_simrika_df <- read.func.csv(filepaths_df, 5, olink=FALSE)
 
-
+#List of bridging samples
+bridge_vec <- c("T041", "T050", "T120", "T351", "FTLD_039", "BC18", "01-0007 baseline", "01-0021 baseline")
 
 cat("\n\n\n\n###############################################################################################\n",
             "3. CLEAN THE FTD COHORT FIRST\n",
@@ -236,140 +237,173 @@ demographics_df <- left_join(all_template_df,all_data_df, by="Freezer_ID")
 
 
 
-
 cat("\n\n\n\n###############################################################################################\n",
             "8. FORMAT THE VARIABLES\n",
             "###############################################################################################\n\n\n")
 
-# # #Format properly the different variables:
+#Format properly the different variables:
 
-# # ##Categorical variables
-# # demographics_df$Freezer_ID <- as.factor(demographics_df$Freezer_ID)
-# # demographics_df$PlateID <- as.factor(demographics_df$PlateID)
-# # demographics_df$Index <- as.factor(demographics_df$Index)
-# # demographics_df$Primary_DX_clin_final <- as.factor(demographics_df$Primary_DX_clin_final)
-# # demographics_df$Primary_DX_clin_visit <- as.factor(demographics_df$Primary_DX_clin_visit)
-# # demographics_df$DX_PPA_lifetime <- as.factor(demographics_df$DX_PPA_lifetime)
-# # demographics_df$Evidence_AD_lifetime <- as.factor(demographics_df$Evidence_AD_lifetime)
-# # demographics_df$CSF.AD_visit <- as.factor(demographics_df$CSF.AD_visit)
-# # demographics_df$Evidence_ASYN_lifetime <- as.factor(demographics_df$Evidence_ASYN_lifetime)
-# # demographics_df$ASYN.SAA_visit <- as.factor(demographics_df$ASYN.SAA_visit)
-# # demographics_df$Postmortem_primary <- as.factor(demographics_df$Postmortem_primary)
-# # demographics_df$Genetics_FamilyHistory <- as.factor(demographics_df$Genetics_FamilyHistory)
-# # demographics_df$APOEe4_alleles <- as.factor(demographics_df$APOEe4_alleles)
-# # demographics_df$Sex <- as.factor(demographics_df$Sex)
-# # demographics_df$Race_ethnicity <- as.factor(demographics_df$Race_ethnicity)
-# # demographics_df$Onset_type <- as.factor(demographics_df$Onset_type)
-# # demographics_df$Arthritis <- as.factor(demographics_df$Arthritis)
+#Categorical variables
+demographics_df$Freezer_ID <- as.factor(demographics_df$Freezer_ID)
+demographics_df$PlateID <- as.factor(demographics_df$PlateID)
+demographics_df$SampleID <- as.factor(demographics_df$SampleID)
+demographics_df$Index <- as.factor(demographics_df$Index)
+demographics_df$Lifetime_PlasmaSerum <- as.factor(demographics_df$Lifetime_PlasmaSerum)
+demographics_df$Longitudinal_CSF <- as.factor(demographics_df$Longitudinal_CSF)
+demographics_df$DNA <- as.factor(demographics_df$DNA)
+demographics_df$Primary_DX_clin_final <- as.factor(demographics_df$Primary_DX_clin_final)
+demographics_df$Primary_DX_clin_visit <- as.factor(demographics_df$Primary_DX_clin_visit)
+demographics_df$DX_PPA_lifetime <- as.factor(demographics_df$DX_PPA_lifetime)
+demographics_df$Postmortem_primary <- as.factor(demographics_df$Postmortem_primary)
+demographics_df$Evidence_AD <- as.factor(demographics_df$Evidence_AD)
+demographics_df$CSF.AD_visit <- as.factor(demographics_df$CSF.AD_visit)
+demographics_df$Evidence_ASYN_lifetime <- as.factor(demographics_df$Evidence_ASYN_lifetime)
+demographics_df$ASYN.SAA_visit <- as.factor(demographics_df$ASYN.SAA_visit)
+demographics_df$FAMILY_GENE <- as.factor(demographics_df$FAMILY_GENE)
+demographics_df$GENETIC_STATUS <- as.factor(demographics_df$GENETIC_STATUS)
+demographics_df$APOE <- as.factor(demographics_df$APOE)
+demographics_df$Sex <- as.factor(demographics_df$Sex)
+demographics_df$Race <- as.factor(demographics_df$Race)
+demographics_df$Hispanic_ethnicity <- as.factor(demographics_df$Hispanic_ethnicity)
+demographics_df$Onset_type <- as.factor(demographics_df$Onset_type)
+demographics_df$Arthritis <- as.factor(demographics_df$Arthritis)
+demographics_df$Barcode <- as.factor(demographics_df$Barcode)
+demographics_df$Alternate_MRN <- as.factor(demographics_df$Alternate_MRN)
+demographics_df$Alternate_ID_DID <- as.factor(demographics_df$Alternate_ID_DID)
+demographics_df$RAVE_visit <- as.factor(demographics_df$RAVE_visit)
+demographics_df$Quanterix_kit <- as.factor(demographics_df$Quanterix_kit)
 
-# # ##Numerical variables
-# # demographics_df$CSF_ptau_visit <- as.numeric(demographics_df$CSF_ptau_visit)
-# # demographics_df$CSF_ttau_visit <- as.numeric(demographics_df$CSF_ttau_visit)
-# # demographics_df$CSF_abeta42_visit <- as.numeric(demographics_df$CSF_abeta42_visit)
-# # demographics_df$CSF_ATI_visit <- as.numeric(demographics_df$CSF_ATI_visit)
-# # demographics_df$Age <- as.numeric(demographics_df$Age)
-# # demographics_df$Onset_age <- as.numeric(demographics_df$Onset_age)
-# # demographics_df$Education <- as.numeric(demographics_df$Education)
-# # demographics_df$NFL_visit <- as.numeric(demographics_df$NFL_visit)
-# # demographics_df$GFAP_visit <- as.numeric(demographics_df$GFAP_visit)
-# # demographics_df$YKL40_visit <- as.numeric(demographics_df$YKL40_visit)
-# # demographics_df$WMH_PV <- as.numeric(demographics_df$WMH_PV)
-# # demographics_df$WMH_D <- as.numeric(demographics_df$WMH_D)
-# # demographics_df$CDR_original_SOB <- as.numeric(demographics_df$CDR_original_SOB)
-# # demographics_df$CDR_original_Total <- as.numeric(demographics_df$CDR_original_Total)
-# # demographics_df$PSPRS_visit <- as.numeric(demographics_df$PSPRS_visit)
-# # demographics_df$MOCA_visit_1yrmax_zscore <- as.numeric(demographics_df$MOCA_visit_1yrmax_zscore)
+##Numerical variables
+demographics_df$CSF_ptau_visit <- as.numeric(demographics_df$CSF_ptau_visit)
+demographics_df$CSF_ttau_visit <- as.numeric(demographics_df$CSF_ttau_visit)
+demographics_df$CSF_abeta42_visit <- as.numeric(demographics_df$CSF_abeta42_visit)
+demographics_df$CSF_ATI_visit <- as.numeric(demographics_df$CSF_ATI_visit)
+demographics_df$Age <- as.numeric(demographics_df$Age)
+demographics_df$Onset_age <- as.numeric(demographics_df$Onset_age)
+demographics_df$Education <- as.numeric(demographics_df$Education)
+demographics_df$NFL_visit <- as.numeric(demographics_df$NFL_visit)
+demographics_df$GFAP_visit <- as.numeric(demographics_df$GFAP_visit)
+demographics_df$YKL40_visit <- as.numeric(demographics_df$YKL40_visit)
+demographics_df$Fazekas_all <- as.numeric(demographics_df$Fazekas_all)
+demographics_df$Fazekas_PV <- as.numeric(demographics_df$Fazekas_PV)
+demographics_df$Fazekas_D <- as.numeric(demographics_df$Fazekas_D)
+demographics_df$PSPRS_visit <- as.numeric(demographics_df$PSPRS_visit)
+demographics_df$MOCA_visit_1yrmax_zscore <- as.numeric(demographics_df$MOCA_visit_1yrmax_zscore)
+demographics_df$FreezeThaw_cycles <- as.numeric(demographics_df$FreezeThaw_cycles)
 
-# # ##Date variables
-# # demographics_df$DOB <- as.Date(as.character(demographics_df$DOB_dd.mmmm.yy), format="%Y-%m-%d") 
-# # demographics_df$Date <- as.Date(as.character(demographics_df$ID_Date_dd.mmmm.yy), format="%Y-%m-%d") 
+##Date variables
+demographics_df$DOB <- as.Date(as.character(demographics_df$DOB_dd.mmmm.yy), format="%Y-%m-%d") 
+demographics_df$Date <- as.Date(as.character(demographics_df$ID_Date_dd.mmmm.yy), format="%Y-%m-%d") 
 
-
-
-# # cat("\n\n\n\n###############################################################################################\n",
-# #             "5. CREATE NEW VARIABLES\n",
-# #             "###############################################################################################\n\n\n")
-
-# #Combine/Modify some of the variables to make new ones: 
-# local_data_nonftd_df <- local_data_nonftd_df %>%
-#         mutate(Race=case_when(grepl("White", Race) | grepl("Caucasian", Race)  ~ "White",
-#                               grepl("Black", Race)  ~ "Black",
-#                               grepl("Asian", Race)  ~ "Asian",
-#                               grepl("Alaska", Race) ~ "American indian or Alaska native",
-#                               TRUE ~ "Unknown")) %>%
-#         mutate(Hispanic_ethnicity=case_when(grepl("Hispanic", Hispanic_ethnicity)  ~ "Yes",
-#                                             TRUE ~ "No")) %>%
-#         data.frame()
-
-# # ##Calculate ages
-# # demographics_df <- demographics_df %>%
-# #     mutate(Age=case_when(is.na(Age)==TRUE ~ as.numeric(Date - DOB)/365,
-# #             TRUE ~ as.numeric(Age)))%>%
-# #     mutate(Disease_duration= (as.numeric(Age - Onset_age))) %>%
-# #     data.frame()
-
-# # #Standardize DX for the analyses within APD only first
-# # demographics_df <- demographics_df %>%
-# #     mutate(APD_DX= Primary_DX_clin_final) %>%
-# #     mutate(APD_DX=case_when(grepl("PSP", APD_DX) | grepl("PSP", Postmortem_primary) ~ "PSP",
-# #                             grepl("CBS", APD_DX) | grepl("CBD", Postmortem_primary) ~ "CBS",
-# #                             TRUE ~ "Other")) %>%
-# #     data.frame()
+##Onset age range
+demographics_df$AGE_AT_VISIT_RNG <- factor(demographics_df$Age_range, order = TRUE)
+demographics_df$AGE_AT_ONSET_RNG <- factor(demographics_df$Onset_age_range, order = TRUE)
 
 
-# # #Standardize AD and ASyn-SAA diagnosis
-# # demographics_df <- demographics_df %>%
-# #     mutate(Evidence_AD_lifetime_binary=case_when(grepl("Yes", Evidence_AD_lifetime) ~ "ADpos",
-# #                                                   grepl("No", Evidence_AD_lifetime) ~ "ADneg")) %>%
-# #     mutate(Evidence_AD_visit_binary=case_when(grepl("Positive", CSF.AD_visit) ~ "ADpos",
-# #                                                   grepl("No", CSF.AD_visit) ~ "ADneg",
-# #                                                     grepl("Borderline", CSF.AD_visit) ~ "ADneg",
-# #                                                     grepl("Inconsistent", CSF.AD_visit) ~ "ADneg")) %>%
-# #     mutate(Evidence_ASYN_lifetime_binary=case_when(grepl("Yes", Evidence_ASYN_lifetime) ~ "ASYNpos",
-# #                                                   grepl("No", Evidence_ASYN_lifetime) ~ "ASYNneg")) %>%
-# #     mutate(ASYN.SAA_visit_binary=case_when(grepl("Positive", ASYN.SAA_visit) ~ "ASYNpos",
-# #                                     grepl("Negative", ASYN.SAA_visit) ~ "ASYNneg")) %>%
-# #     data.frame()
+cat("\n\n\n\n###############################################################################################\n",
+            "9. CREATE NEW VARIABLES: DEMOGRAPHICS\n",
+            "###############################################################################################\n\n\n")
 
-# # #Create a co-pathology variable: indicates ASyn-SAA OR AD status in addition to hypothesized primary DX
-# # ##will need to expand beyond PSP and CBS later
-# # demographics_df <- demographics_df %>%
-# #     mutate(Copathology=case_when(grepl("Yes", Evidence_AD_lifetime) & grepl("PSP", APD_DX) ~ "AD+",
-# #                                  grepl("Yes", Evidence_ASYN_lifetime) & grepl("PSP", APD_DX) ~ "ASyn-SAA+",
-# #                                 grepl("Yes", Evidence_AD_lifetime) & grepl("Yes", Evidence_ASYN_lifetime) & grepl("PSP", APD_DX) ~ "AD+/ASyn-SAA+",
-# #                                 grepl("Yes", Evidence_ASYN_lifetime) & grepl("CBS", APD_DX) ~ "ASyn-SAA+",
-# #                                 TRUE ~ "No")) %>%
-# #     data.frame()
+#Combine/Modify some of the variables to make new ones: 
+demographics_df <- demographics_df %>%
+                    mutate(Race=case_when(grepl("White", Race) | grepl("Caucasian", Race)  ~ "White",
+                              grepl("Black", Race)  ~ "Black",
+                              grepl("Asian", Race)  ~ "Asian",
+                              grepl("Alaska", Race) ~ "American indian or Alaska native",
+                              grepl("Mixed", Race) ~ "Complex",
+                              TRUE ~ "Unknown")) %>%
 
-# # #Standardize Onset for the YOAD vs LOAD analyses
-# # demographics_df <- demographics_df %>%
-# #     mutate(EarlyOnset=case_when(as.numeric(Onset_age)<=65 ~ "EarlyOnset",
-# #                                 as.numeric(Onset_age)>65 ~ "LateOnset",
-# #                                 TRUE ~ "NA")) %>%
-# #     mutate(EarlyOnsetAD=case_when(Evidence_AD_lifetime_binary=="Yes" & as.numeric(Onset_age)<=65 ~ "EOAD",
-# #                                   Evidence_AD_lifetime_binary=="Yes" & as.numeric(Onset_age)>65 ~ "LOAD",
-# #                                 TRUE ~ "NA")) %>%
-# #     data.frame()
+##Calculate ages
+    mutate(Age=case_when(is.na(Age)==TRUE ~ as.numeric(Date - DOB)/365,
+            TRUE ~ as.numeric(Age)))%>%
+    mutate(Disease_duration= (as.numeric(Age - Onset_age))) %>%
+
+##Binarize AD
+    mutate(CSF.AD_visit_binary=case_when(grepl("Borderline", CSF.AD_visit) | grepl("Inconsistent", CSF.AD_visit) | grepl("Negative", CSF.AD_visit) ~ "AD-",
+                                        grepl("Positive", CSF.AD_visit) ~ "AD+",
+                               TRUE ~ "NA")) %>%
+    mutate(Evidence_AD_binary=case_when(grepl("Yes", Evidence_AD) ~ "AD+",
+                                        grepl("No", Evidence_AD) ~ "AD-",
+                               TRUE ~ "NA")) %>%
+##Bridging sample
+    mutate(Bridge=case_when(grepl("003", PlateID) & (Freezer_ID %in% bridge_vec)==TRUE ~ "Bridging sample on plate 3",
+                            TRUE ~ "Regular sample")) %>%
+data.frame()
 
 
-# # cat("\n\n\n\n###############################################################################################\n",
-# #             "6. CREATE NEW VARIABLES\n",
-# #             "###############################################################################################\n\n\n")
+cat("\n\n\n\n###############################################################################################\n",
+            "10. CREATE NEW VARIABLES: CTE PAPER \n",
+            "###############################################################################################\n\n\n")
 
-# # demographics_df <- demographics_df[, c("Freezer_ID", "PlateID",
-# #                                     "Sex", "Education", "Race_ethnicity",
-# #                                     "EarlyOnset", "EarlyOnsetAD",
-# #                                     "APD_DX", "Copathology", "Evidence_AD_lifetime_binary", "Evidence_AD_visit_binary", "Evidence_ASYN_lifetime_binary", "ASYN.SAA_visit_binary",
-# #                                     "Age", "Onset_age", "Disease_duration",
-# #                                     "CSF_ptau_visit",  "CSF_ttau_visit", "CSF_abeta42_visit", "CSF_ATI_visit",
-# #                                     "NFL_visit", "GFAP_visit", "YKL40_visit",
-# #                                     "CDR_original_SOB", "CDR_original_Total",
-# #                                     "PSPRS_visit",  "MOCA_visit_1yrmax_zscore")]
+#Standardize DX for the analyses: CTE paper
+##Here we have to decide how the analysis is going to be done. We want to 1) have all the CTE subjects and 2) include the HC. 
+###Inclusion:
+####all the athletes, even the one with CBD (T128) or the one with svPPA (CTE1096);
+####all the local HC, on plate 1 and 2. Later Lian can exclude based on his own criteria (plate ID, age);
 
-# # demographics_df <- demographics_df[!duplicated(demographics_df$Freezer_ID), ]
+demographics_df <- demographics_df %>%
+    mutate(DX_CTE_paper=case_when(grepl("CTE", Primary_DX_clin_final) | grepl("T128", Freezer_ID) | grepl("CTE1096", Freezer_ID) ~ "CTE",
+                                  grepl("NHL", Freezer_ID) | grepl("FTLD_HC", Freezer_ID) | grepl("LS10", Freezer_ID)~ "HC",
+                                  TRUE ~ "Other")) %>%
+data.frame()
 
-# # write.csv(demographics_df, "demographics.csv")
 
+cat("\n\n\n\n###############################################################################################\n",
+            "11. CREATE NEW VARIABLES: PSP PAPER\n",
+            "###############################################################################################\n\n\n")
+
+#Standardize DX for the analyses: PSP paper
+##Here we have to decide how the analysis is going to be done. We want to 1) have all subjects with high likelihood of having PSP pathology; 2) include the HC; 3) include the AD cases. 
+###Inclusion:
+####all the PSP, based on 1) clinical diagnosis of PSP; 2) pathology of PSP;
+####all the local HC, on plate 1 and 2, which are likely to be excluded later based on plate or age;
+####all the local AD cases, on plate 1 and 2, for comparison with another disease, including the CBS;
+###Exclusions:
+####For now don't include the sponsor genetic carriers (even if PSP), 
+
+demographics_df <- demographics_df %>%
+    mutate(DX_PSP_paper=case_when(grepl("PSP", Primary_DX_clin_final) | grepl("PSP", Postmortem_primary) ~ "PSP",                                  
+                                  grepl("Yes", Evidence_AD) | grepl("AD", Postmortem_primary) ~ "AD",
+                                  grepl("NHL", Freezer_ID) | grepl("FTLD_HC", Freezer_ID) | grepl("LS10", Freezer_ID)~ "HC",
+                                  TRUE ~ "Other")) %>%
+data.frame()
+
+
+
+cat("\n\n\n\n###############################################################################################\n",
+            "12. CREATE NEW VARIABLES: YOAD LOAD PAPER\n",
+            "###############################################################################################\n\n\n")
+
+#Standardize DX for the analyses: YOAD vs LOAD paper
+##Here we have to decide how the analysis is going to be done. We want to 1) have all subjects with AD+ status and 2) the local HC.
+###Inclusion:
+####all the local AD+ subjects, based on AD evidence. Later PSP and other groups where AD is co-pathology can be excluded.
+####all the local HC, on plate 1 and 2, which are likely to be excluded later based on plate or age;
+###Exclusions:
+####For now don't include the sponsor genetic carriers (even if PSP).
+####Excludes automatically CTE1052 as AD was found at pathology but he doesnt have an age at onset for AD. 
+
+demographics_df <- demographics_df %>%
+    mutate(DX_YOAD_paper=case_when((grepl("Yes", Evidence_AD) | grepl("AD", Postmortem_primary)) & Onset_age <=65  ~ "YOAD",
+                                    (grepl("Yes", Evidence_AD) | grepl("AD", Postmortem_primary)) & Onset_age >65  ~ "LOAD",                                  
+                                     grepl("NHL", Freezer_ID) | grepl("FTLD_HC", Freezer_ID) | grepl("LS10", Freezer_ID)~ "HC",
+                                     TRUE ~ "Other")) %>%
+data.frame()
+
+colnames(demographics_df)
+
+cat("\n\n\n\n###############################################################################################\n",
+            "13. SAVE DATAFRAME\n",
+            "###############################################################################################\n\n\n")
+
+#Remove the bridge samples as not needed this time
+# demographics_df <- demographics_df[!duplicated(demographics_df$Freezer_ID), ]
+
+demographics_df <- demographics_df %>% 
+                   dplyr::select(-CSF.AD_visit, -Evidence_AD) %>% 
+                   data.frame()
+
+write.csv(demographics_df, "demographics.csv")
 
 
 
