@@ -228,18 +228,54 @@ data.frame()
         cat("Check the merge as there seems to be the wrong number of samples (including 2 sample controls, 3 plate controls, 3 negative controls. \n")
     }
 
-#Save the file
-write.csv(plateA_df, "PlateA_reformatted.csv")
-
 
 cat("\n\n\n\n###############################################################################################\n",
             "4. MERGE THE DATA FROM PLATE A REFORMATTED WITH THE DEMOGRAPHICS\n",
             "###############################################################################################\n\n\n")
 
+#Create the list of sample IDs and UniProt IDs to remove (ie the controls)
+SampleControls_SampleID_vec <- c("QC657-1", "QC657-1_2","NC1", "NC2", "NC3", "PC1", "PC2", "PC3")
+InternalControls_UniProt_vec <- c("EXT1", "EXT2", "EXT3", "EXT4", "AMP1", "AMP2", "AMP3", "AMP4", "INC1", "INC2", "INC3", "INC4")
+
+#Remove them from Plate A so we are left only with the Tartaglia sample data
+plateA_df <- subset(plateA_df, !plateA_df$SampleID %in%SampleControls_SampleID_vec)
+plateA_df <- subset(plateA_df, !plateA_df$UniProt %in%InternalControls_UniProt_vec)
+
+
+#Plate A is in a different format as it comes from the old software. 
+#Give plateA_df new cols with empty rows to match the plates B and C layout
+var_to_add_df <- data.frame("Sample_Type"=rep("SAMPLE", nrow(plateA_df)),
+                            "Block"=rep("Not available", nrow(plateA_df)),
+                            "WellID"=rep("Not available", nrow(plateA_df)),
+                            "IntraCV"=rep("Can calculate if needed", nrow(plateA_df)),
+                            "InterCV"=rep("Can calculate if needed", nrow(plateA_df)),
+                            "Processing_StartDate"=rep("Not available", nrow(plateA_df)),
+                            "Processing_EndDate"=rep("Not available", nrow(plateA_df)),
+                            "AnalyzerID"=rep("Not available", nrow(plateA_df)),
+                            "ExploreVersion"=rep("Pre-2023", nrow(plateA_df)))
+plateA_df<- cbind(plateA_df, var_to_add_df)
+    
+#Merge with the demographics file
+plateA_df <- left_join(plateA_df, demographics_df, by="SampleID")
+
+plateA_df <- plateA_df %>% 
+            dplyr::select(-Index.x, -PlateID.x, -X) %>% 
+            data.frame()          
+
+  
+    ##DEFENSIVE CODING
+    if (nrow(plateA_df) != 737*88) {
+        cat("Check why the total number of rows is not as expected (ie 737 assays * 88 samples\n")
+    }
+
+#Save the file
+write.csv(plateA_df, "PlateA_single.csv")
 
 
 
-
+# cat("\n\n\n\n###############################################################################################\n",
+#             "5. MERGE THE DATA FROM PLATE A REFORMATTED WITH THE DEMOGRAPHICS\n",
+#             "###############################################################################################\n\n\n")
 
 
 
