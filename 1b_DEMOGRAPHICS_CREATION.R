@@ -47,6 +47,14 @@ allftd_demo_simrika_df <- read.func.csv(filepaths_df, 5, olink=FALSE)
 #List of bridging samples
 bridge_vec <- c("T041", "T050", "T120", "T351", "FTLD_039", "BC18", "01-0007 baseline", "01-0021 baseline")
 
+#List of potential HYT medications
+hyt_medications_vec <- c("Amlodipine", "Apo-Amlodipine", "ASA", "Aspirin",
+                        "Cardizem", "Carvedilol", "Coreg", "Coversyl", "Diltiazem", "Diovan",
+                         "Hydrochlorothiazide", "Lozartan", "Micardis", "Norvasc",
+                         "Perindopril", "Ramipril", "Valsartan", "Telmisartan")
+
+other_vasc_medications_vec <- c("Atorvastatin","Clopidogrel", "Crestor", "Lipitor", "Nifedipine", "Plavix", "Procardia", "Provastatin", "Rosuvastatin", "Tiazac")
+
 cat("\n\n\n\n###############################################################################################\n",
             "3. CLEAN THE FTD COHORT FIRST\n",
             "###############################################################################################\n\n\n")
@@ -73,16 +81,16 @@ local_data_ftd_df <- local_data_ftd_df[, c("Freezer_ID",
                                             "Age", "Sex", "Race", "Hispanic_ethnicity", 
                                             "DOB_dd.mmmm.yy","ID_Date_dd.mmmm.yy", "Onset_age",  "Onset_type", "Age_range", "Onset_age_range",
                                             "Education", "NFL_visit","GFAP_visit", "YKL40_visit",
-                                            "Arthritis", "Fazekas_all", "Fazekas_PV","Fazekas_D",
+                                            "MRI_QC", "Fazekas_all", "WMH_PV", "WMH_D", 
+                                            "HYT", "Medication_8_Vasc_visit", "Autoimmune",  
                                             "PSPRS_visit","MOCA_visit_1yrmax_zscore",
                                             "Barcode", "Alternate_MRN","Alternate_ID_DID",  "RAVE_visit",
                                             "FreezeThaw_cycles", "Quanterix_kit")] 
 
     #DEFENSIVE CODING
-    if (sum(local_data_ftd_df$Freezer_ID %in% all_template_df$Freezer_ID)<67) {
+    if (sum(local_data_ftd_df$Freezer_ID %in% all_template_df$Freezer_ID)!=69) {
         cat("Check that the subject IDs in clinical files match the ones in the Olink dataset or use grep\n")
     }
-
 
 
 cat("\n\n\n\n###############################################################################################\n",
@@ -104,6 +112,9 @@ local_data_nonftd_df$Age_range <- NA #blank column
 local_data_nonftd_df$Onset_age_range <- NA #blank column 
 local_data_nonftd_df$FreezeThaw_cycles <- NA #blank column 
 local_data_nonftd_df$DX_PPA_lifetime <- NA #blank column 
+local_data_nonftd_df$HYT <- NA #blank column 
+local_data_nonftd_df$Medication_8_Vasc_visit <- NA #blank column 
+local_data_nonftd_df$Autoimmune <- NA #blank column 
 
 local_data_nonftd_df <- local_data_nonftd_df[, c("Freezer_ID",
                                             "Lifetime_PlasmaSerum", "Longitudinal_CSF", "DNA", 
@@ -114,7 +125,8 @@ local_data_nonftd_df <- local_data_nonftd_df[, c("Freezer_ID",
                                             "Age","Sex", "Race", "Hispanic_ethnicity", 
                                             "DOB_dd.mmmm.yy","ID_Date_dd.mmmm.yy", "Onset_age",  "Onset_type", "Age_range", "Onset_age_range",
                                             "Education", "NFL_visit","GFAP_visit", "YKL40_visit",
-                                            "Arthritis", "Fazekas_all", "Fazekas_PV","Fazekas_D",
+                                            "MRI_QC", "Fazekas_all", "WMH_PV", "WMH_D", 
+                                            "HYT", "Medication_8_Vasc_visit", "Autoimmune",  
                                             "PSPRS_visit","MOCA_visit_1yrmax_zscore",
                                             "Barcode", "Alternate_MRN","Alternate_ID_DID",  "RAVE_visit",
                                             "FreezeThaw_cycles", "Quanterix_kit")] 
@@ -123,7 +135,6 @@ local_data_nonftd_df <- local_data_nonftd_df[, c("Freezer_ID",
     if (sum(local_data_nonftd_df$Freezer_ID %in% all_template_df$Freezer_ID)!= length(local_data_nonftd_df$Freezer_ID)) {
         cat("Check that the subject IDs in clinical files match the ones in the Olink dataset or use grep\n")
     }
-
 
 
 cat("\n\n\n\n###############################################################################################\n",
@@ -180,10 +191,13 @@ sponsor_data_allftd_df$Education <- NA #blank column
 sponsor_data_allftd_df$NFL_visit <- NA #blank column 
 sponsor_data_allftd_df$GFAP_visit <- NA #blank column 
 sponsor_data_allftd_df$YKL40_visit <- NA #blank column 
-sponsor_data_allftd_df$Arthritis <- NA #blank column 
+sponsor_data_allftd_df$HYT <- NA #blank column 
+sponsor_data_allftd_df$Medication_8_Vasc_visit <- NA #blank column 
+sponsor_data_allftd_df$Autoimmune <- NA #blank column 
+sponsor_data_allftd_df$MRI_QC <- NA #blank column 
 sponsor_data_allftd_df$Fazekas_all <- NA #blank column 
-sponsor_data_allftd_df$Fazekas_PV <- NA #blank column 
-sponsor_data_allftd_df$Fazekas_D <- NA #blank column 
+sponsor_data_allftd_df$WMH_PV <- NA #blank column 
+sponsor_data_allftd_df$WMH_D <- NA #blank column 
 sponsor_data_allftd_df$PSPRS_visit <- NA #blank column 
 sponsor_data_allftd_df$MOCA_visit_1yrmax_zscore <- NA #blank column 
 sponsor_data_allftd_df$Quanterix_kit <- NA #blank column 
@@ -197,8 +211,8 @@ sponsor_data_allftd_df <- sponsor_data_allftd_df[, c("Freezer_ID",
                                                 "Age","Sex", "Race", "Hispanic_ethnicity", 
                                                 "DOB_dd.mmmm.yy","ID_Date_dd.mmmm.yy", "Onset_age",  "Onset_type", "Age_range", "Onset_age_range",
                                                 "Education", "NFL_visit","GFAP_visit", "YKL40_visit",
-                                                "Arthritis", "Fazekas_all", "Fazekas_PV","Fazekas_D",
-                                                "PSPRS_visit","MOCA_visit_1yrmax_zscore",
+                                                "MRI_QC", "Fazekas_all", "WMH_PV", "WMH_D", 
+                                                "HYT", "Medication_8_Vasc_visit", "Autoimmune",                                                "PSPRS_visit","MOCA_visit_1yrmax_zscore",
                                                 "Barcode", "Alternate_MRN","Alternate_ID_DID",  "RAVE_visit",
                                                 "FreezeThaw_cycles", "Quanterix_kit")] 
 
@@ -266,7 +280,9 @@ demographics_df$Sex <- as.factor(demographics_df$Sex)
 demographics_df$Race <- as.factor(demographics_df$Race)
 demographics_df$Hispanic_ethnicity <- as.factor(demographics_df$Hispanic_ethnicity)
 demographics_df$Onset_type <- as.factor(demographics_df$Onset_type)
-demographics_df$Arthritis <- as.factor(demographics_df$Arthritis)
+demographics_df$HYT <- as.factor(demographics_df$HYT)
+demographics_df$Medication_8_Vasc_visit <- as.factor(demographics_df$Medication_8_Vasc_visit)
+demographics_df$Autoimmune <- as.factor(demographics_df$Autoimmune)
 demographics_df$Barcode <- as.factor(demographics_df$Barcode)
 demographics_df$Alternate_MRN <- as.factor(demographics_df$Alternate_MRN)
 demographics_df$Alternate_ID_DID <- as.factor(demographics_df$Alternate_ID_DID)
@@ -284,9 +300,10 @@ demographics_df$Education <- as.numeric(demographics_df$Education)
 demographics_df$NFL_visit <- as.numeric(demographics_df$NFL_visit)
 demographics_df$GFAP_visit <- as.numeric(demographics_df$GFAP_visit)
 demographics_df$YKL40_visit <- as.numeric(demographics_df$YKL40_visit)
+demographics_df$MRI_QC <- as.numeric(demographics_df$MRI_QC)
 demographics_df$Fazekas_all <- as.numeric(demographics_df$Fazekas_all)
-demographics_df$Fazekas_PV <- as.numeric(demographics_df$Fazekas_PV)
-demographics_df$Fazekas_D <- as.numeric(demographics_df$Fazekas_D)
+demographics_df$WMH_PV <- as.numeric(demographics_df$WMH_PV)
+demographics_df$WMH_D <- as.numeric(demographics_df$WMH_D)
 demographics_df$PSPRS_visit <- as.numeric(demographics_df$PSPRS_visit)
 demographics_df$MOCA_visit_1yrmax_zscore <- as.numeric(demographics_df$MOCA_visit_1yrmax_zscore)
 demographics_df$FreezeThaw_cycles <- as.numeric(demographics_df$FreezeThaw_cycles)
@@ -325,6 +342,29 @@ demographics_df <- demographics_df %>%
     mutate(Evidence_AD_binary=case_when(grepl("Yes", Evidence_AD) ~ "AD+",
                                         grepl("No", Evidence_AD) ~ "AD-",
                                TRUE ~ "NA")) %>%
+
+##Binarize HYT
+    mutate(HYT_reported=case_when(grepl("Active", HYT) | grepl("Remote", HYT) | grepl("Yes", HYT) ~ "Yes",
+                                 grepl("No", HYT) ~ "No",
+                               TRUE ~ "NA")) %>%
+
+
+##Binarize medication
+    mutate(HYT_medication=case_when(Medication_8_Vasc_visit %in% hyt_medications_vec ~ "Yes",
+                                    is.na(Medication_8_Vasc_visit)==TRUE ~ NA,
+                                    TRUE ~ "No")) %>%
+
+##Binarize medication
+    mutate(HYT_all=case_when(HYT_medication =="Yes" | HYT_reported=="Yes" ~ "Yes",
+                            is.na(HYT)==TRUE ~ NA,
+                            TRUE ~ "No")) %>%
+
+##Level WMH
+    mutate(WMH_level=case_when(Fazekas_all>2 ~ "High",
+                               Fazekas_all>1 ~ "Moderate",
+                               Fazekas_all>0 ~ "Low",
+                               TRUE ~ "NA")) %>%
+
 ##Bridging sample
     mutate(Bridge=case_when(grepl("003", PlateID) & (Freezer_ID %in% bridge_vec)==TRUE ~ "Bridging sample on plate 3",
                             TRUE ~ "Regular sample")) %>%
@@ -400,7 +440,7 @@ cat("\n\n\n\n###################################################################
 # demographics_df <- demographics_df[!duplicated(demographics_df$Freezer_ID), ]
 
 demographics_df <- demographics_df %>% 
-                   dplyr::select(-CSF.AD_visit, -Evidence_AD) %>% 
+                   dplyr::select(-CSF.AD_visit, -Evidence_AD, -Medication_8_Vasc_visit, -HYT) %>% 
                    data.frame()
 
 write.csv(demographics_df, "demographics.csv")
