@@ -272,12 +272,12 @@ plateA_df <- plateA_df %>%
 write.csv(plateA_df, "PlateA_single.csv")
 
 
-
 # cat("\n\n\n\n###############################################################################################\n",
-#             "5. MERGE THE DATA FROM PLATE A REFORMATTED WITH THE DEMOGRAPHICS\n",
+#             "5. MERGE THE DATA FROM PLATE B WITH THE DEMOGRAPHICS\n",
 #             "###############################################################################################\n\n\n")
 
-
+# #Take Plate B
+# plateB_df <- read.func.csv(filepaths_df, 2, olink=TRUE) #diff delimiter: using OlinkAnalyze read function is best
 
 
 

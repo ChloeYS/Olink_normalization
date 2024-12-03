@@ -360,10 +360,14 @@ demographics_df <- demographics_df %>%
                             TRUE ~ "No")) %>%
 
 ##Level WMH
-    mutate(WMH_level=case_when(Fazekas_all>2 ~ "High",
-                               Fazekas_all>1 ~ "Moderate",
-                               Fazekas_all>0 ~ "Low",
+    mutate(WMH_level=case_when(Fazekas_all>1 ~ "Moderate to high",
+                               Fazekas_all>=0 ~ "Low",
                                TRUE ~ "NA")) %>%
+
+##Level WMH_D
+    mutate(WMH_D_level=case_when(WMH_D>1 ~ "Moderate to high",
+                                WMH_D>=0 ~ "Low",
+                                TRUE ~ "NA")) %>%
 
 ##Bridging sample
     mutate(Bridge=case_when(grepl("003", PlateID) & (Freezer_ID %in% bridge_vec)==TRUE ~ "Bridging sample on plate 3",
