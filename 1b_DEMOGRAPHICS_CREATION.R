@@ -376,7 +376,21 @@ data.frame()
 
 
 cat("\n\n\n\n###############################################################################################\n",
-            "10. CREATE NEW VARIABLES: CTE PAPER \n",
+            "10. CREATE NEW VARIABLES: BIOMARKER LOG\n",
+            "###############################################################################################\n\n\n")
+
+demographics_df <- demographics_df %>%     
+                mutate(logNFL_visit= log(NFL_visit)) %>% 
+                mutate(logYKL40_visit= log(YKL40_visit)) %>% 
+                mutate(logGFAP_visit= log(GFAP_visit)) %>% 
+                mutate(logCSF_ptau_visit= log(CSF_ptau_visit)) %>% 
+                mutate(logCSF_ttau_visit= log(CSF_ttau_visit)) %>% 
+                mutate(logCSF_abeta42_visit= log(CSF_abeta42_visit)) %>% 
+                data.frame() #Convert to dataframe to facilitate operations.
+
+
+cat("\n\n\n\n###############################################################################################\n",
+            "11. CREATE NEW VARIABLES: CTE PAPER \n",
             "###############################################################################################\n\n\n")
 
 #Standardize DX for the analyses: CTE paper
@@ -393,7 +407,7 @@ data.frame()
 
 
 cat("\n\n\n\n###############################################################################################\n",
-            "11. CREATE NEW VARIABLES: PSP PAPER\n",
+            "12. CREATE NEW VARIABLES: PSP PAPER\n",
             "###############################################################################################\n\n\n")
 
 #Standardize DX for the analyses: PSP paper
@@ -415,7 +429,7 @@ data.frame()
 
 
 cat("\n\n\n\n###############################################################################################\n",
-            "12. CREATE NEW VARIABLES: YOAD LOAD PAPER\n",
+            "13. CREATE NEW VARIABLES: YOAD LOAD PAPER\n",
             "###############################################################################################\n\n\n")
 
 #Standardize DX for the analyses: YOAD vs LOAD paper
@@ -437,7 +451,7 @@ data.frame()
 colnames(demographics_df)
 
 cat("\n\n\n\n###############################################################################################\n",
-            "13. SAVE DATAFRAME\n",
+            "14. SAVE DATAFRAME\n",
             "###############################################################################################\n\n\n")
 
 #Remove the bridge samples as not needed this time
