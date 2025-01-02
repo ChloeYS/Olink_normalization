@@ -272,18 +272,61 @@ plateA_df <- plateA_df %>%
 write.csv(plateA_df, "PlateA_single.csv")
 
 
-# cat("\n\n\n\n###############################################################################################\n",
-#             "5. MERGE THE DATA FROM PLATE B WITH THE DEMOGRAPHICS\n",
-#             "###############################################################################################\n\n\n")
+cat("\n\n\n\n###############################################################################################\n",
+            "5. MERGE THE DATA FROM PLATE B WITH THE DEMOGRAPHICS\n",
+            "###############################################################################################\n\n\n")
 
-# #Take Plate B
-# plateB_df <- read.func.csv(filepaths_df, 2, olink=TRUE) #diff delimiter: using OlinkAnalyze read function is best
+#Create the list of sample IDs and UniProt IDs to remove (ie the controls)
+SampleControls_SampleID_vec <- c("QC657-1", "QC657-1_2","NC1", "NC2", "NC3", "PC1", "PC2", "PC3")
+InternalControls_UniProt_vec <- c("EXT1", "EXT2", "EXT3", "EXT4", "AMP1", "AMP2", "AMP3", "AMP4", "INC1", "INC2", "INC3", "INC4")
+
+#Remove them from Plate B so we are left only with the Tartaglia sample data
+plateB_df <- subset(plateB_df, !plateB_df$SampleID %in%SampleControls_SampleID_vec)
+plateB_df <- subset(plateB_df, !plateB_df$UniProt %in%InternalControls_UniProt_vec)
+    
+#Merge with the demographics file
+plateB_df <- left_join(plateB_df, demographics_df, by="SampleID")
+
+plateB_df <- plateB_df %>% 
+            dplyr::select(-Index.x, -PlateID.x, -X) %>% 
+            data.frame()          
+
+    ##DEFENSIVE CODING
+    cat("Reminder: for some reason, this plate has an extra assay: KNG1 for a total of 738 assays\n")
+    if (nrow(plateB_df) != 738*88) {
+        cat("Check why the total number of rows is not as expected (ie 738 assays * 88 samples\n")
+    }
+
+#Save the file
+write.csv(plateB_df, "PlateB_single.csv")
 
 
+cat("\n\n\n\n###############################################################################################\n",
+            "6. MERGE THE DATA FROM PLATE C WITH THE DEMOGRAPHICS\n",
+            "###############################################################################################\n\n\n")
 
+#Create the list of sample IDs and UniProt IDs to remove (ie the controls)
+SampleControls_SampleID_vec <- c("QC657-1", "QC657-1_2","NC1", "NC2", "NC3", "PC1", "PC2", "PC3")
+InternalControls_UniProt_vec <- c("EXT1", "EXT2", "EXT3", "EXT4", "AMP1", "AMP2", "AMP3", "AMP4", "INC1", "INC2", "INC3", "INC4")
 
+#Remove them from Plate C so we are left only with the Tartaglia sample data
+plateC_df <- subset(plateC_df, !plateC_df$SampleID %in%SampleControls_SampleID_vec)
+plateC_df <- subset(plateC_df, !plateC_df$UniProt %in%InternalControls_UniProt_vec)
+    
+#Merge with the demographics file
+plateC_df <- left_join(plateC_df, demographics_df, by="SampleID")
 
+plateC_df <- plateC_df %>% 
+            dplyr::select(-Index.x, -PlateID.x, -X) %>% 
+            data.frame()          
 
+    ##DEFENSIVE CODING
+    if (nrow(plateC_df) != 737*88) {
+        cat("Check why the total number of rows is not as expected (ie 738 assays * 88 samples\n")
+    }
+
+#Save the file
+write.csv(plateC_df, "PlateC_single.csv")
 
 
 
